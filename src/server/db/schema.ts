@@ -1,13 +1,10 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
-import { sql } from "drizzle-orm";
+import { env } from "@/env";
 import {
-  index,
+  pgEnum,
   pgTableCreator,
   serial,
+  text,
   timestamp,
-  varchar,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -16,21 +13,28 @@ import {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `chad-next_${name}`);
+export const createTable = pgTableCreator((name) => `${env.PROJECT_NAME}_${name}`);
 
-export const posts = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
+export const accountTypeEnum = pgEnum("type", ["email", "google", "github"]);
+
+export const userTable = createTable("user", {
+  id: serial("id").primaryKey(),
+  email: text("email").unique(),
+  // emailVerified: timestamp("email_verified", { mode: "date" }),
+  accountType: accountTypeEnum("account_type").notNull(),
+  githubId: text("github_id").unique(),
+  googleId: text("google_id").unique(),
+  password: text("password"),
+  salt: text("salt"),
+});
+
+export const sessionTable = createTable("session", {
+  id: text("id").primaryKey(),
+  userId: serial("user_id")
+    .notNull()
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
+});
