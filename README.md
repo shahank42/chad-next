@@ -1,6 +1,6 @@
 # Chad-Next
 
-Chad-Next aims to be the most comprehensive Next.js starter kit available.
+Chad-Next aims to be the most sigma Next.js starter kit available.
 
 Be a chad and kickstart your next SaaS project with a powerful and modern tech stack.
 
