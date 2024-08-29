@@ -7,7 +7,13 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    PROJECT_NAME: z.string(),
     DATABASE_URL: z.string().url(),
+    HOST_NAME: z.string().url(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
+    GITHUB_CLIENT_SECRET: z.string(),
+    GITHUB_CLIENT_ID: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -27,7 +33,13 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    PROJECT_NAME: process.env.PROJECT_NAME,
     DATABASE_URL: process.env.DATABASE_URL,
+    HOST_NAME: process.env.HOST_NAME,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
